@@ -49,8 +49,7 @@ public class Day02_1 {
 
     int score(Play play) {
         int score = 0;
-        switch (play.mine)
-        {
+        switch (play.mine) {
             case "X" -> score += 1;
             case "Y" -> score += 2;
             case "Z" -> score += 3;

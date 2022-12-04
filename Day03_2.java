@@ -16,7 +16,7 @@ public class Day03_2 extends Day03_1 {
         int result = 0;
         List<Rucksack> rucksacks = getRucksacks();
         for (int i = 0; i < rucksacks.size(); i = i + 3) {
-            result = result + priority(findCommonIn(List.of(rucksacks.get(i), rucksacks.get(i+1), rucksacks.get(i+2))));
+            result = result + priority(findCommonIn(List.of(rucksacks.get(i), rucksacks.get(i + 1), rucksacks.get(i + 2))));
         }
         return result;
     }
