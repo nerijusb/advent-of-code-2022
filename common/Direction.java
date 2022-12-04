@@ -3,20 +3,21 @@ package common;
 public enum Direction {
     UP, DOWN, LEFT, RIGHT;
 
-    public Direction rotate(boolean left) {
+    public Direction rotateLeft() {
         return switch (this) {
-            case UP -> left ? LEFT : RIGHT;
-            case DOWN -> left ? RIGHT : LEFT;
-            case LEFT -> left ? DOWN : UP;
-            case RIGHT -> left ? UP : DOWN;
+            case UP -> LEFT;
+            case DOWN -> RIGHT;
+            case LEFT -> DOWN;
+            case RIGHT -> UP;
         };
     }
 
-    public Direction rotateLeft() {
-        return rotate(true);
-    }
-
     public Direction rotateRight() {
-        return rotate(false);
+        return switch (this) {
+            case UP -> RIGHT;
+            case DOWN -> LEFT;
+            case LEFT -> UP;
+            case RIGHT -> DOWN;
+        };
     }
 }
