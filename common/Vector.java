@@ -1,10 +1,10 @@
 package common;
 
-public class Line {
+public class Vector {
     public Coordinates from;
     public Coordinates to;
 
-    public Line(int x1, int y1, int x2, int y2) {
+    public Vector(int x1, int y1, int x2, int y2) {
         from = new Coordinates(x1, y1);
         to = new Coordinates(x2, y2);
     }
