@@ -35,6 +35,16 @@ public class Coordinates {
         };
     }
 
+    public Coordinates getValidAdjacent(Direction direction, int maxX, int maxY) {
+        var coordinates = switch (direction) {
+            case UP -> top();
+            case DOWN -> bottom();
+            case LEFT -> left();
+            case RIGHT -> right();
+        };
+        return isValid(coordinates, maxX, maxY) ? coordinates : null;
+    }
+
     public List<Coordinates> allAdjacent() {
         List<Coordinates> coordinates = new ArrayList<>();
         for (Direction direction : Direction.values()) {
@@ -46,8 +56,12 @@ public class Coordinates {
     public List<Coordinates> allValidAdjacent(int maxX, int maxY) {
         return allAdjacent()
                 .stream()
-                .filter(c -> c.x >= 0 && c.y >= 0 && c.x < maxX && c.y < maxY)
+                .filter(c -> isValid(c, maxX, maxY))
                 .collect(Collectors.toList());
+    }
+
+    public boolean isValid(Coordinates c, int maxX, int maxY) {
+        return c.x >= 0 && c.y >= 0 && c.x < maxX && c.y < maxY;
     }
 
     public List<Coordinates> allAdjacentAndDiagonal() {
@@ -62,7 +76,7 @@ public class Coordinates {
     public List<Coordinates> allValidAdjacentAndDiagonal(int maxX, int maxY) {
         return allAdjacentAndDiagonal()
                 .stream()
-                .filter(c -> c.x >= 0 && c.y >= 0 && c.x < maxX && c.y < maxY)
+                .filter(c -> isValid(c, maxX, maxY))
                 .collect(Collectors.toList());
     }
 
