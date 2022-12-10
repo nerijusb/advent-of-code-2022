@@ -14,6 +14,11 @@ public class Coordinates {
         this.y = y;
     }
 
+    public Coordinates(Coordinates source) {
+        this.x = source.x;
+        this.y = source.y;
+    }
+
     public boolean isSame(Coordinates coordinates) {
         return isSameY(coordinates) && isSameX(coordinates);
     }
@@ -26,7 +31,7 @@ public class Coordinates {
         return Integer.valueOf(coordinates.x).equals(x);
     }
 
-    public Coordinates adjacent(Direction direction) {
+    public Coordinates getAdjacent(Direction direction) {
         return switch (direction) {
             case UP -> top();
             case DOWN -> bottom();
@@ -45,16 +50,16 @@ public class Coordinates {
         return isValid(coordinates, maxX, maxY) ? coordinates : null;
     }
 
-    public List<Coordinates> allAdjacent() {
+    public List<Coordinates> getAllAdjacent() {
         List<Coordinates> coordinates = new ArrayList<>();
         for (Direction direction : Direction.values()) {
-            coordinates.add(adjacent(direction));
+            coordinates.add(getAdjacent(direction));
         }
         return coordinates;
     }
 
-    public List<Coordinates> allValidAdjacent(int maxX, int maxY) {
-        return allAdjacent()
+    public List<Coordinates> getAllValidAdjacent(int maxX, int maxY) {
+        return getAllAdjacent()
                 .stream()
                 .filter(c -> isValid(c, maxX, maxY))
                 .collect(Collectors.toList());
@@ -64,8 +69,8 @@ public class Coordinates {
         return c.x >= 0 && c.y >= 0 && c.x < maxX && c.y < maxY;
     }
 
-    public List<Coordinates> allAdjacentAndDiagonal() {
-        List<Coordinates> coordinates = allAdjacent();
+    public List<Coordinates> getAllAdjacentAndDiagonal() {
+        List<Coordinates> coordinates = getAllAdjacent();
         coordinates.add(topLeft());
         coordinates.add(topRight());
         coordinates.add(bottomLeft());
@@ -73,8 +78,17 @@ public class Coordinates {
         return coordinates;
     }
 
-    public List<Coordinates> allValidAdjacentAndDiagonal(int maxX, int maxY) {
-        return allAdjacentAndDiagonal()
+    public List<Coordinates> getAllDiagonal() {
+        List<Coordinates> coordinates = new ArrayList<>();
+        coordinates.add(topLeft());
+        coordinates.add(topRight());
+        coordinates.add(bottomLeft());
+        coordinates.add(bottomRight());
+        return coordinates;
+    }
+
+    public List<Coordinates> getAllValidAdjacentAndDiagonal(int maxX, int maxY) {
+        return getAllAdjacentAndDiagonal()
                 .stream()
                 .filter(c -> isValid(c, maxX, maxY))
                 .collect(Collectors.toList());
@@ -117,8 +131,7 @@ public class Coordinates {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coordinates that = (Coordinates) o;
-        return x == that.x &&
-                y == that.y;
+        return Objects.equals(x, that.x) && Objects.equals(y, that.y);
     }
 
     @Override
