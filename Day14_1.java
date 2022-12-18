@@ -33,7 +33,7 @@ public class Day14_1 {
     private boolean drop(Coordinates sandSource, char[][] map) {
         Coordinates current = sandSource;
         while (true) {
-            if (current.y == 599) {
+            if (current.y + 1 == map.length) {
                 // fell to the bottom
                 return false;
             }
@@ -81,14 +81,14 @@ public class Day14_1 {
     }
 
     protected char[][] getMap() {
-        char[][] map = new char[600][600];
-        List<StonePath> stonePaths = Inputs.readStrings("Day14")
+        List<Coordinates> allStones = Inputs.readStrings("Day14")
                 .stream()
                 .map(StonePath::new)
+                .flatMap(p -> p.getPoints().stream())
                 .toList();
-        for (StonePath stonePath : stonePaths) {
-            stonePath.getPoints().forEach(p -> map[p.y][p.x] = '#');
-        }
+        int maxY = allStones.stream().mapToInt(s -> s.y).max().getAsInt();
+        char[][] map = new char[maxY + 10][600];
+        allStones.forEach(p -> map[p.y][p.x] = '#');
         return map;
     }
 
