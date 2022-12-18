@@ -126,6 +126,10 @@ public class Coordinates {
         return new Coordinates(x - 1, y + 1);
     }
 
+    public int distanceTo(Coordinates to) {
+        return Math.abs(to.x - this.x) + Math.abs(to.y - this.y);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
