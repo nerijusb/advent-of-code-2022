@@ -12,15 +12,17 @@ import java.util.stream.IntStream;
  * @author Nerijus
  */
 public class Day15_1 {
+    public static final Pattern SENSOR_PATTERN = Pattern.compile("Sensor at x=(?<sx>-?\\d+), y=(?<sy>-?\\d+): closest beacon is at x=(?<bx>-?\\d+), y=(?<by>-?\\d+)");
+
     public static void main(String[] args) {
         System.out.println("Positions cannot contain a beacon: " + new Day15_1().getResult());
     }
 
     private int getResult() {
-        List<Sensor> sensors = Inputs.readStrings("Day15").stream().map(Sensor::new).toList();
-        int minX = sensors.stream().flatMapToInt(s -> IntStream.of(s.position.x, s.beaconPosition.x)).min().orElseThrow();
-        int maxX = sensors.stream().flatMapToInt(s -> IntStream.of(s.position.x, s.beaconPosition.x)).max().orElseThrow();
-        int maxDistance = sensors.stream().mapToInt(s -> s.beaconDistance).max().orElseThrow();
+        List<Sensor> sensors = getSensors();
+        int minX = getMinX(sensors);
+        int maxX = getMaxX(sensors);
+        int maxDistance = getMaxDistance(sensors);
 
         int result = 0;
         for (int x = minX - maxDistance; x < maxX + maxDistance; x++) {
@@ -33,14 +35,44 @@ public class Day15_1 {
         return result;
     }
 
+    protected List<Sensor> getSensors() {
+        return Inputs.readStrings("Day15")
+                .stream()
+                .map(Sensor::new)
+                .toList();
+    }
+
+    private static int getMaxDistance(List<Sensor> sensors) {
+        return sensors
+                .stream()
+                .mapToInt(s -> s.beaconDistance)
+                .max()
+                .orElseThrow();
+    }
+
+    private static int getMaxX(List<Sensor> sensors) {
+        return sensors
+                .stream()
+                .flatMapToInt(s -> IntStream.of(s.position.x, s.beaconPosition.x))
+                .max()
+                .orElseThrow();
+    }
+
+    private static int getMinX(List<Sensor> sensors) {
+        return sensors
+                .stream()
+                .flatMapToInt(s -> IntStream.of(s.position.x, s.beaconPosition.x))
+                .min()
+                .orElseThrow();
+    }
+
     static class Sensor {
         Coordinates position;
         Coordinates beaconPosition;
         int beaconDistance;
 
         public Sensor(String source) {
-            Pattern pattern = Pattern.compile("Sensor at x=(?<sx>-?\\d+), y=(?<sy>-?\\d+): closest beacon is at x=(?<bx>-?\\d+), y=(?<by>-?\\d+)");
-            Matcher matcher = pattern.matcher(source);
+            Matcher matcher = SENSOR_PATTERN.matcher(source);
             if (matcher.find()) {
                 position = new Coordinates(
                         Integer.parseInt(matcher.group("sx")),
@@ -59,6 +91,10 @@ public class Day15_1 {
                 return true;
             }
             return position.distanceTo(possiblePosition) > beaconDistance;
+        }
+
+        boolean hasSensorOrBeacon(Coordinates possiblePosition) {
+            return position.equals(possiblePosition) || beaconPosition.equals(possiblePosition);
         }
     }
 }
