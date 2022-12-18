@@ -16,12 +16,11 @@ public class Day14_1 {
         System.out.println("Units of sand: " + new Day14_1().getResult());
     }
 
-    private int getResult() {
+    protected int getResult() {
         char[][] map = getMap();
 
-        Coordinates sandSource = new Coordinates(500,0);
         while (true) {
-            if (!drop(sandSource, map)) {
+            if (!drop(map)) {
                 break;
             }
         }
@@ -30,7 +29,8 @@ public class Day14_1 {
         return countSand(map);
     }
 
-    private boolean drop(Coordinates sandSource, char[][] map) {
+    private boolean drop(char[][] map) {
+        Coordinates sandSource = new Coordinates(500,0);
         Coordinates current = sandSource;
         while (true) {
             if (current.y + 1 == map.length) {
@@ -39,7 +39,7 @@ public class Day14_1 {
             }
             if (isStuck(current, map)) {
                 map[current.y][current.x] = 'o';
-                return true;
+                return !current.equals(sandSource);
             }
             Coordinates bottom = current.top();
             if (isBlocked(bottom, map)) {
@@ -87,9 +87,13 @@ public class Day14_1 {
                 .flatMap(p -> p.getPoints().stream())
                 .toList();
         int maxY = allStones.stream().mapToInt(s -> s.y).max().getAsInt();
-        char[][] map = new char[maxY + 10][600];
+        char[][] map = new char[maxY + 3][maxX()];
         allStones.forEach(p -> map[p.y][p.x] = '#');
         return map;
+    }
+
+    protected int maxX() {
+        return 600;
     }
 
     static class StonePath {
